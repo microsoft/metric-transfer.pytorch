@@ -16,22 +16,20 @@ This repo contains the pytorch implementation for the semi-supervised learning p
 
 ## Main results
 
-| <sub>Metric pretraining</sub> | <sub>Propagation method</sub> |    50     |    100    |    250    |    500    |   1000    |   2000    |   4000    |   8000    |
-| :----------------: | :----------------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: |
-|         <sub>No</sub>         |         <sub>No</sub>         |   20.95   |   25.35   |   41.63   |   54.06   |   65.08   |   73.22   |   81.44   |   86.23   |
-|   <sub>Bootstrapping</sub>    |  <sub>Nearest neighbor</sub>  |   21.79   |   25.37   |   42.70   |   54.14   |   68.08   |   75.17   |   83.30   |   87.68   |
-|   <sub>Bootstrapping</sub>    |      <sub>Spectral</sub>      |   22.78   |   27.95   |   47.28   |   60.73   |   72.60   |   78.20   |   85.10   | **88.26** |
-|    <sub>Colorization</sub>    |         <sub>No</sub>         |   49.57   |   55.41   |   64.65   |   68.81   |   73.40   |   77.93   |   82.17   |   86.25   |
-|    <sub>Colorization</sub>    |  <sub>Nearest neighbor</sub>  |   49.96   |   52.69   |   65.63   |   65.88   |   70.88   |   76.36   |   80.16   |   84.64   |
-|    <sub>Colorization</sub>    |      <sub>Spectral</sub>      |   53.47   |   55.08   |   68.40   |   71.15   |   72.38   |   76.50   |   80.31   |   84.03   |
-|      <sub>Instance</sub>      |         <sub>No</sub>         |   35.27   |   37.87   |   62.46   |   71.04   |   75.96   |   80.12   |   83.90   |   87.82   |
-|      <sub>Instance</sub>      |  <sub>Nearest neighbor</sub>  |   46.68   |   54.45   |   66.93   |   74.16   |   79.17   |   82.24   | **84.56** |   87.92   |
-|      <sub>Instance</sub>      |      <sub>Spectral</sub>      | **56.34** | **63.53** | **71.26** | **74.77** | **79.38** | **82.34** |   84.52   |   87.48   |
+The test accuracy of our methods and the state-of-the-art methods on CIFAR10 dataset with different number of labeled data.
+
+| <sub>Method</sub> |   50     |    100    |    250    |    500    |   1000    |   2000    |   4000    |   8000    |
+| :----------------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: |
+|    <sub>PI-model</sub>         |   27.36 | 37.20 | 47.07 | 56.30 | 63.70 | 76.50 | 84.17 | 87.30 |
+|   <sub>Mean-Teacher</sub>      |   29.66 | 36.60 | 45.49 | 57.20 | 65.00 | 79.00 | 84.38 | 87.50 |
+|   <sub>VAT</sub>               |   23.00 | 35.58 | 47.61 | 62.90 | 72.80 | **84.00** | **86.79** | **88.10** |
+|    <sub>Pseudo-Label</sub>     |   21.00 | 34.00 | 45.83 | 60.30 | 68.20 | 78.00 | 84.79 | 86.20 |
+|    <sub>**Ours**</sub>         | **56.34** | **63.53** | **71.26** | **74.77** | **79.38** | 82.34 | 84.52 | 87.48 |
 
 
 ## Quick start
 
-* Clone this repo: `git clone git@github.com:bl0/metric-transfer.pytorch.git && cd metric-transfer.pytorch`
+* Clone this repo: `git clone git@github.com:microsoft/metric-transfer.pytorch.git && cd metric-transfer.pytorch`
 
 * Install pytorch and other packages listed in requirements
 
