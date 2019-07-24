@@ -2,15 +2,6 @@
 
 This repo contains the pytorch implementation for the semi-supervised learning paper [(arxiv)](https://arxiv.org/abs/1812.08781).
 
-```latex
-@inproceedings{liu2018deep,
-  title={Deep Metric Transfer for Label Propagation with Limited Annotated Data},
-  author={Liu, Bin and Wu, Zhirong and Hu, Han and Lin, Stephen},
-  journal={arXiv preprint arXiv:1812.08781},
-  year={2018}
-}
-```
-
 ## Requirements
 
 * Python3: Anaconda is recommended because it already contains a lot of packages:
@@ -22,6 +13,21 @@ This repo contains the pytorch implementation for the semi-supervised learning p
 - We formulate semi-supervised learning from a completely different metric transfer perspective.
 - Enjoys the benefit of recent advances self-supervised learning.
 - We hope to draw more attention to unsupervised pretraining for other tasks.
+
+## Main results
+
+| <sub>Metric pretraining</sub> | <sub>Propagation method</sub> |    50     |    100    |    250    |    500    |   1000    |   2000    |   4000    |   8000    |
+| :----------------: | :----------------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: |
+|         <sub>No</sub>         |         <sub>No</sub>         |   20.95   |   25.35   |   41.63   |   54.06   |   65.08   |   73.22   |   81.44   |   86.23   |
+|   <sub>Bootstrapping</sub>    |  <sub>Nearest neighbor</sub>  |   21.79   |   25.37   |   42.70   |   54.14   |   68.08   |   75.17   |   83.30   |   87.68   |
+|   <sub>Bootstrapping</sub>    |      <sub>Spectral</sub>      |   22.78   |   27.95   |   47.28   |   60.73   |   72.60   |   78.20   |   85.10   | **88.26** |
+|    <sub>Colorization</sub>    |         <sub>No</sub>         |   49.57   |   55.41   |   64.65   |   68.81   |   73.40   |   77.93   |   82.17   |   86.25   |
+|    <sub>Colorization</sub>    |  <sub>Nearest neighbor</sub>  |   49.96   |   52.69   |   65.63   |   65.88   |   70.88   |   76.36   |   80.16   |   84.64   |
+|    <sub>Colorization</sub>    |      <sub>Spectral</sub>      |   53.47   |   55.08   |   68.40   |   71.15   |   72.38   |   76.50   |   80.31   |   84.03   |
+|      <sub>Instance</sub>      |         <sub>No</sub>         |   35.27   |   37.87   |   62.46   |   71.04   |   75.96   |   80.12   |   83.90   |   87.82   |
+|      <sub>Instance</sub>      |  <sub>Nearest neighbor</sub>  |   46.68   |   54.45   |   66.93   |   74.16   |   79.17   |   82.24   | **84.56** |   87.92   |
+|      <sub>Instance</sub>      |      <sub>Spectral</sub>      | **56.34** | **63.53** | **71.26** | **74.77** | **79.38** | **82.34** |   84.52   |   87.48   |
+
 
 ## Quick start
 
@@ -124,6 +130,19 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+## Citation 
+
+If you find this paper useful in your research, please consider citing:
+
+```latex
+@inproceedings{liu2018deep,
+  title={Deep Metric Transfer for Label Propagation with Limited Annotated Data},
+  author={Liu, Bin and Wu, Zhirong and Hu, Han and Lin, Stephen},
+  journal={arXiv preprint arXiv:1812.08781},
+  year={2018}
+}
+```
 
 ## Contact
 
