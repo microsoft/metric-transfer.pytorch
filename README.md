@@ -2,15 +2,6 @@
 
 This repo contains the pytorch implementation for the semi-supervised learning paper [(arxiv)](https://arxiv.org/abs/1812.08781).
 
-```latex
-@inproceedings{liu2018deep,
-  title={Deep Metric Transfer for Label Propagation with Limited Annotated Data},
-  author={Liu, Bin and Wu, Zhirong and Hu, Han and Lin, Stephen},
-  journal={arXiv preprint arXiv:1812.08781},
-  year={2018}
-}
-```
-
 ## Requirements
 
 * Python3: Anaconda is recommended because it already contains a lot of packages:
@@ -23,9 +14,22 @@ This repo contains the pytorch implementation for the semi-supervised learning p
 - Enjoys the benefit of recent advances self-supervised learning.
 - We hope to draw more attention to unsupervised pretraining for other tasks.
 
+## Main results
+
+The test accuracy of our methods and the state-of-the-art methods on CIFAR10 dataset with different number of labeled data.
+
+| <sub>Method</sub> |   50     |    100    |    250    |    500    |   1000    |   2000    |   4000    |   8000    |
+| :----------------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: | :-------: |
+|    <sub>PI-model</sub>         |   27.36 | 37.20 | 47.07 | 56.30 | 63.70 | 76.50 | 84.17 | 87.30 |
+|   <sub>Mean-Teacher</sub>      |   29.66 | 36.60 | 45.49 | 57.20 | 65.00 | 79.00 | 84.38 | 87.50 |
+|   <sub>VAT</sub>               |   23.00 | 35.58 | 47.61 | 62.90 | 72.80 | **84.00** | **86.79** | **88.10** |
+|    <sub>Pseudo-Label</sub>     |   21.00 | 34.00 | 45.83 | 60.30 | 68.20 | 78.00 | 84.79 | 86.20 |
+|    <sub>**Ours**</sub>         | **56.34** | **63.53** | **71.26** | **74.77** | **79.38** | 82.34 | 84.52 | 87.48 |
+
+
 ## Quick start
 
-* Clone this repo: `git clone git@github.com:bl0/metric-transfer.pytorch.git && cd metric-transfer.pytorch`
+* Clone this repo: `git clone git@github.com:microsoft/metric-transfer.pytorch.git && cd metric-transfer.pytorch`
 
 * Install pytorch and other packages listed in requirements
 
@@ -124,6 +128,19 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+## Citation 
+
+If you find this paper useful in your research, please consider citing:
+
+```latex
+@inproceedings{liu2018deep,
+  title={Deep Metric Transfer for Label Propagation with Limited Annotated Data},
+  author={Liu, Bin and Wu, Zhirong and Hu, Han and Lin, Stephen},
+  journal={arXiv preprint arXiv:1812.08781},
+  year={2018}
+}
+```
 
 ## Contact
 
