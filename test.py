@@ -15,17 +15,20 @@ def NN(net, lemniscate, trainloader, testloader, recompute_memory=0):
 
     train_features = lemniscate.memory.t()
     if hasattr(trainloader.dataset, 'imgs'):
-        train_labels = torch.LongTensor([y for (p, y) in trainloader.dataset.imgs]).cuda()
+        train_labels = torch.LongTensor(
+            [y for (p, y) in trainloader.dataset.imgs]).cuda()
     else:
         train_labels = get_train_labels(trainloader)
     if recompute_memory:
         transform_bak = trainloader.dataset.transform
         trainloader.dataset.transform = testloader.dataset.transform
-        temploader = torch.utils.data.DataLoader(trainloader.dataset, batch_size=100, shuffle=False, num_workers=1)
+        temploader = torch.utils.data.DataLoader(
+            trainloader.dataset, batch_size=100, shuffle=False, num_workers=1)
         for batch_idx, (inputs, targets, indexes) in enumerate(temploader):
             batch_size = inputs.size(0)
             features = net(inputs)
-            train_features[:, batch_idx * batch_size:batch_idx * batch_size + batch_size] = features.data.t()
+            train_features[:, batch_idx * batch_size:batch_idx *
+                           batch_size + batch_size] = features.data.t()
         train_labels = get_train_labels(trainloader)
         trainloader.dataset.transform = transform_bak
 
@@ -52,11 +55,10 @@ def NN(net, lemniscate, trainloader, testloader, recompute_memory=0):
             cls_time.update(time.time() - end)
             end = time.time()
 
-            print('Test [{}/{}]\t'
-                  'Net Time {net_time.val:.3f} ({net_time.avg:.3f})\t'
-                  'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'
-                  'Top1: {:.2f}'.format(
-                total, testsize, correct * 100. / total, net_time=net_time, cls_time=cls_time))
+            print(f'Test [{total}/{testsize}]\t'
+                  f'Net Time {net_time.val:.3f} ({net_time.avg:.3f})\t'
+                  f'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'
+                  f'Top1: {correct * 100. / total:.2f}')
 
     return correct / total
 
@@ -70,7 +72,8 @@ def kNN(net, lemniscate, trainloader, testloader, K, sigma, recompute_memory=0):
 
     train_features = lemniscate.memory.t()
     if hasattr(trainloader.dataset, 'imgs'):
-        train_labels = torch.LongTensor([y for (p, y) in trainloader.dataset.imgs]).cuda()
+        train_labels = torch.LongTensor(
+            [y for (p, y) in trainloader.dataset.imgs]).cuda()
     else:
         train_labels = get_train_labels(trainloader)
     C = train_labels.max() + 1
@@ -78,11 +81,13 @@ def kNN(net, lemniscate, trainloader, testloader, K, sigma, recompute_memory=0):
     if recompute_memory:
         transform_bak = trainloader.dataset.transform
         trainloader.dataset.transform = testloader.dataset.transform
-        temploader = torch.utils.data.DataLoader(trainloader.dataset, batch_size=100, shuffle=False, num_workers=1)
+        temploader = torch.utils.data.DataLoader(
+            trainloader.dataset, batch_size=100, shuffle=False, num_workers=1)
         for batch_idx, (inputs, targets, indexes) in enumerate(temploader):
             bs = inputs.size(0)
             features = net(inputs)
-            train_features[:, batch_idx * bs:batch_idx * bs + bs] = features.data.t()
+            train_features[:, batch_idx * bs:batch_idx *
+                           bs + bs] = features.data.t()
         train_labels = get_train_labels(trainloader)
         trainloader.dataset.transform = transform_bak
 
@@ -107,7 +112,8 @@ def kNN(net, lemniscate, trainloader, testloader, K, sigma, recompute_memory=0):
             retrieval_one_hot.resize_(bs * K, C).zero_()
             retrieval_one_hot.scatter_(1, retrieval.view(-1, 1), 1)
             yd_transform = yd.clone().div_(sigma).exp_()
-            probs = torch.sum(torch.mul(retrieval_one_hot.view(bs, -1, C), yd_transform.view(bs, -1, 1)), 1)
+            probs = torch.sum(torch.mul(retrieval_one_hot.view(
+                bs, -1, C), yd_transform.view(bs, -1, 1)), 1)
             _, predictions = probs.sort(1, True)
 
             # Find which predictions match the target
@@ -120,11 +126,10 @@ def kNN(net, lemniscate, trainloader, testloader, K, sigma, recompute_memory=0):
             total += targets.size(0)
 
             if batch_idx % 100 == 0:
-                print('Test [{}/{}]\t'
-                      'Net Time {net_time.val:.3f} ({net_time.avg:.3f})\t'
-                      'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'
-                      'Top1: {:.2f}  top5: {:.2f}'.format(
-                    total, testsize, top1 * 100. / total, top5 * 100. / total, net_time=net_time, cls_time=cls_time))
+                print(f'Test [{total}/{testsize}]\t'
+                      f'Net Time {net_time.val:.3f} ({net_time.avg:.3f})\t'
+                      f'Cls Time {cls_time.val:.3f} ({cls_time.avg:.3f})\t'
+                      f'Top1: {top1 * 100. / total:.2f}  top5: {top5 * 100. / total:.2f}')
 
     print(top1 * 100. / total)
 
@@ -160,15 +165,12 @@ def validate(val_loader, model, criterion, device='cpu', print_freq=100):
             end = time.time()
 
             if i % print_freq == 0:
-                print('Test: [{0}/{1}] '
-                      'Time {batch_time.val:.3f} ({batch_time.avg:.3f}) '
-                      'Loss {loss.val:.4f} ({loss.avg:.4f}) '
-                      'Prec@1 {top1.val:.3f} ({top1.avg:.3f}) '
-                      'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
-                    i, len(val_loader), batch_time=batch_time, loss=losses,
-                    top1=top1, top5=top5))
+                print(f'Test: [{i}/{len(val_loader)}] '
+                      f'Time {batch_time.val:.3f} ({batch_time.avg:.3f}) '
+                      f'Loss {loss.val:.4f} ({loss.avg:.4f}) '
+                      f'Prec@1 {top1.val:.3f} ({top1.avg:.3f}) '
+                      f'Prec@5 {top5.val:.3f} ({top5.avg:.3f})')
 
-        print(' * Prec@1 {top1.avg:.3f} Prec@5 {top5.avg:.3f}'
-              .format(top1=top1, top5=top5))
+        print(f' * Prec@1 {top1.avg:.3f} Prec@5 {top5.avg:.3f}')
 
     return top1.avg

@@ -1,9 +1,9 @@
 """Train ImageNet with PyTorch."""
 import argparse
+import glob
 import os
 import random
 import time
-import glob
 from pprint import pprint
 
 import torch
@@ -13,9 +13,9 @@ import torch.optim as optim
 import torchvision.datasets as datasets
 import torchvision.models as models
 import torchvision.transforms as transforms
-from tensorboardX import SummaryWriter
 from torch.optim.lr_scheduler import MultiStepLR, CosineAnnealingLR
 from torch.utils.data.sampler import SubsetRandomSampler
+from torch.utils.tensorboard import SummaryWriter
 
 from lib.datasets import PseudoDatasetFolder
 from lib.utils import AverageMeter, accuracy, CosineAnnealingLRWithRestart
@@ -76,7 +76,8 @@ def get_dataloader(args):
     print('-' * 80)
     print('selected labeled indexes: ', args.index_labeled)
 
-    pseudo_trainset = PseudoDatasetFolder(trainset, labeled_indexes=args.index_labeled)
+    pseudo_trainset = PseudoDatasetFolder(
+        trainset, labeled_indexes=args.index_labeled)
     # load pseudo labels
     if args.pseudo_dir is not None:
         pseudo_files = glob.glob(args.pseudo_dir + '/*')
@@ -87,8 +88,10 @@ def get_dataloader(args):
         pseudo_labels = []
         for pseudo_file in pseudo_files:
             pseudo_dict = torch.load(pseudo_file)
-            pseudo_indexes.append(pseudo_dict['pseudo_indexes'][:pseudo_num_per_chunk])
-            pseudo_labels.append(pseudo_dict['pseudo_labels'][:pseudo_num_per_chunk])
+            pseudo_indexes.append(
+                pseudo_dict['pseudo_indexes'][:pseudo_num_per_chunk])
+            pseudo_labels.append(
+                pseudo_dict['pseudo_labels'][:pseudo_num_per_chunk])
             assert (args.index_labeled == pseudo_dict['labeled_indexes']).all()
         pseudo_indexes = torch.cat(pseudo_indexes)
         pseudo_labels = torch.cat(pseudo_labels)
@@ -152,7 +155,8 @@ def get_lr_scheduler(optimizer, lr_scheduler, max_iters):
     elif lr_scheduler == 'cosine-with-restart':
         scheduler = CosineAnnealingLRWithRestart(optimizer, eta_min=0.00001)
     elif lr_scheduler == 'multi-step':
-        scheduler = MultiStepLR(optimizer, [max_iters * 3 // 7, max_iters * 6 // 7], gamma=0.1)
+        scheduler = MultiStepLR(
+            optimizer, [max_iters * 3 // 7, max_iters * 6 // 7], gamma=0.1)
     else:
         raise ValueError("not supported")
 
@@ -205,7 +209,8 @@ def train(net, optimizer, scheduler, trainloader, testloader, criterion, summary
         batch_time.update(time.time() - end)
         end = time.time()
 
-        summary_writer.add_scalar('lr', optimizer.param_groups[0]['lr'], global_step)
+        summary_writer.add_scalar(
+            'lr', optimizer.param_groups[0]['lr'], global_step)
         summary_writer.add_scalar('top1', top1.val, global_step)
         summary_writer.add_scalar('top5', top5.val, global_step)
         summary_writer.add_scalar('batch_time', batch_time.val, global_step)
@@ -213,16 +218,14 @@ def train(net, optimizer, scheduler, trainloader, testloader, criterion, summary
         summary_writer.add_scalar('train_loss', train_loss.val, global_step)
 
         if global_step % args.print_freq == 0:
-            print('Train: [{}/{}] '
-                  'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
-                  'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
-                  'Lr: {lr:.5f} '
-                  'prec1: {top1.val:.3f} ({top1.avg:.3f}) '
-                  'prec5: {top5.val:.3f} ({top5.avg:.3f}) '
-                  'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})'.format(
-                global_step, args.max_iters, lr=optimizer.param_groups[0]['lr'],
-                batch_time=batch_time, data_time=data_time,
-                top1=top1, top5=top5, train_loss=train_loss))
+            lr = optimizer.param_groups[0]['lr']
+            print(f'Train: [{global_step}/{args.max_iters}] '
+                  f'Time: {batch_time.val:.3f} ({batch_time.avg:.3f}) '
+                  f'Data: {data_time.val:.3f} ({data_time.avg:.3f}) '
+                  f'Lr: {lr:.5f} '
+                  f'prec1: {top1.val:.3f} ({top1.avg:.3f}) '
+                  f'prec5: {top5.val:.3f} ({top5.avg:.3f}) '
+                  f'Loss: {train_loss.val:.4f} ({train_loss.avg:.4f})')
 
         if (global_step + 1) % args.eval_freq == 0 or global_step == args.max_iters - 1:
             acc = validate(testloader, net, criterion,

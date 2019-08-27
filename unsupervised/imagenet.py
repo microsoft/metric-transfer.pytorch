@@ -24,9 +24,12 @@ model_names = sorted(name for name in models.__dict__
                      and callable(models.__dict__[name]))
 
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
-parser.add_argument('--data-dir', metavar='DIR', help='path to dataset', required=True)
-parser.add_argument('--model-dir', metavar='DIR', default='./checkpoint/instance_imagenet', help='path to save model')
-parser.add_argument('--log-dir', metavar='DIR', default='./tensorboard/instance_imagenet', help='path to save log')
+parser.add_argument('--data-dir', metavar='DIR',
+                    help='path to dataset', required=True)
+parser.add_argument('--model-dir', metavar='DIR',
+                    default='./checkpoint/instance_imagenet', help='path to save model')
+parser.add_argument('--log-dir', metavar='DIR',
+                    default='./tensorboard/instance_imagenet', help='path to save log')
 parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18',
                     choices=model_names,
                     help='model architecture: ' +
@@ -126,10 +129,12 @@ def main():
     print("=> building optimizer")
     ndata = train_dataset.__len__()
     if args.nce_k > 0:
-        lemniscate = NCEAverage(args.low_dim, ndata, args.nce_k, args.nce_t, args.nce_m).cuda()
+        lemniscate = NCEAverage(args.low_dim, ndata,
+                                args.nce_k, args.nce_t, args.nce_m).cuda()
         criterion = NCECriterion(ndata).cuda()
     else:
-        lemniscate = LinearAverage(args.low_dim, ndata, args.nce_t, args.nce_m).cuda()
+        lemniscate = LinearAverage(
+            args.low_dim, ndata, args.nce_t, args.nce_m).cuda()
         criterion = nn.CrossEntropyLoss().cuda()
 
     optimizer = torch.optim.SGD(model.parameters(), args.lr,
@@ -208,7 +213,7 @@ def train(train_loader, model, lemniscate, criterion, optimizer, epoch):
         # measure data loading time
         data_time.update(time.time() - end)
 
-        index = index.cuda(async=True)
+        index = index.cuda(non_blocking=True)
 
         # compute output
         feature = model(inputs)
@@ -230,12 +235,10 @@ def train(train_loader, model, lemniscate, criterion, optimizer, epoch):
         end = time.time()
 
         if i % args.print_freq == 0:
-            print('Epoch: [{0}][{1}/{2}]\t'
-                  'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                  'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'.format(
-                epoch, i, len(train_loader), batch_time=batch_time,
-                data_time=data_time, loss=losses))
+            print(f'Epoch: [{epoch}/{args.epochs}][{i}/{len(train_loader)}]\t'
+                  f'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+                  f'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
+                  f'Loss {losses.val:.4f} ({losses.avg:.4f})\t')
 
 
 def get_model_name(epoch):
@@ -245,7 +248,8 @@ def get_model_name(epoch):
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
     torch.save(state, filename)
     if is_best:
-        shutil.copyfile(filename, os.path.join(args.model_dir, 'model_best.pth.tar'))
+        shutil.copyfile(filename, os.path.join(
+            args.model_dir, 'model_best.pth.tar'))
 
 
 def adjust_learning_rate(optimizer, epoch):
