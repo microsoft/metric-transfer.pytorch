@@ -3,6 +3,7 @@ from torch import nn
 from .utils import get_train_labels
 
 class SupervisedSoftmax(object):
+    """Supervised Metric Pretraining."""
     def __init__(self,trainloader,device,t=0.07):
         super(SupervisedSoftmax,self).__init__()
         # get train labels
@@ -13,11 +14,14 @@ class SupervisedSoftmax(object):
         self.n_labels = self.labels.max().data.item() + 1
         #Temperature parameter as described in https://arxiv.org/pdf/1805.01978.pdf.
         self.temperature = t
+        
     def to(self,device):
         #send to a device
         self.loss_fn.to(device)
+        
     def __call__(self,dist,y):
         return self.forward(dist,y)
+    
     def forward(self,dist,y):
         #making it more sensitive by dividing by temperature value as in https://arxiv.org/pdf/1805.01978.pdf
         dist.div_(self.temperature)
