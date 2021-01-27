@@ -17,8 +17,8 @@ class SupervisedSoftmax(object):
     def to(self,device):
         #send to a device
         self.loss_fn.to(device)
-    def __call__(self,out,y):
-        return self.forward(out,y)
+    def __call__(self,dist,y):
+        return self.forward(dist,y)
     def forward(self,dist,y):
         #making it more sensitive by dividing by temperature value as in https://arxiv.org/pdf/1805.01978.pdf
         dist.div_(self.temperature)
