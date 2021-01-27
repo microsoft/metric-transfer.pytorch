@@ -11,7 +11,6 @@ class SupervisedSoftmax(object):
         self.loss_fn = nn.CrossEntropyLoss().to(device)
         #init labels
         self.n_labels = self.labels.max().data.item() + 1
-        print(self.n_labels)
         #Temperature parameter as described in https://arxiv.org/pdf/1805.01978.pdf.
         self.temperature = t
     def to(self,device):
